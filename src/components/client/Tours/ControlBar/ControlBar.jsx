@@ -88,6 +88,8 @@ export default function ControlBar({ viewerRef, tour }) {
         viewerRef.current.enableControl(0);
     };
     const handleEnableCardboardMode = () => {
+        if (tourSlice.isCardboardMode) return;
+
         dispatch(enableCardboardMode());
 
         const viewer = document.getElementById('panorama');
@@ -99,8 +101,8 @@ export default function ControlBar({ viewerRef, tour }) {
         const exitButton = document.createElement('button');
         exitButton.id = 'btn-exit-fullscreen';
         exitButton.type = 'button';
-        exitButton.classList = 'fixed right-16 bottom-16 bg-white';
-        exitButton.innerText = 'Exit';
+        exitButton.classList = 'fixed top-2 right-2 font-bold text-white';
+        exitButton.innerHTML = `&#x2715;`;
         exitButton.addEventListener('touchstart', handleExitCardboardMode);
         exitButton.addEventListener('click', handleExitCardboardMode);
         viewer.appendChild(exitButton);
