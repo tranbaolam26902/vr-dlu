@@ -74,6 +74,19 @@ export default function ControlBar({ viewerRef, tour }) {
         );
         dispatch(disableAutoRotate());
     };
+    const handleExitCardboardMode = () => {
+        document.exitFullscreen(); // Exit fullscreen mode
+
+        dispatch(disableCardboardMode());
+
+        // Remove exit fullscreen button from viewer
+        const viewer = document.getElementById('panorama');
+        const btn = document.getElementById('btn-exit-fullscreen');
+        viewer.removeChild(btn);
+
+        // Disable sensor
+        viewerRef.current.enableControl(0);
+    };
     const handleEnableCardboardMode = () => {
         dispatch(enableCardboardMode());
 
@@ -88,19 +101,8 @@ export default function ControlBar({ viewerRef, tour }) {
         exitButton.type = 'button';
         exitButton.classList = 'fixed right-16 bottom-16 bg-white';
         exitButton.innerText = 'Exit';
-        exitButton.addEventListener('click', () => {
-            document.exitFullscreen(); // Exit fullscreen mode
-
-            dispatch(disableCardboardMode());
-
-            // Remove exit fullscreen button from viewer
-            const viewer = document.getElementById('panorama');
-            const btn = document.getElementById('btn-exit-fullscreen');
-            viewer.removeChild(btn);
-
-            // Disable sensor
-            viewerRef.current.enableControl(0);
-        });
+        exitButton.addEventListener('touchstart', handleExitCardboardMode);
+        exitButton.addEventListener('click', handleExitCardboardMode);
         viewer.appendChild(exitButton);
 
         // Enable sensor
