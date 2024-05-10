@@ -85,11 +85,20 @@ export default function ControlBar({ viewerRef, tour }) {
         viewer.removeChild(btn);
 
         // Disable sensor
+        viewerRef.current.enableEffect(0);
         viewerRef.current.enableControl(0);
     };
     const handleEnableCardboardMode = () => {
         if (tourSlice.isCardboardMode) return;
-
+        DeviceOrientationEvent.requestPermission()
+            .then((response) => {
+                if (response == 'granted') {
+                    window.addEventListener('deviceorientation', (e) => {
+                        // do something with e
+                    });
+                }
+            })
+            .catch(console.error);
         dispatch(enableCardboardMode());
 
         const viewer = document.getElementById('panorama');
@@ -108,6 +117,7 @@ export default function ControlBar({ viewerRef, tour }) {
         viewer.appendChild(exitButton);
 
         // Enable sensor
+        viewerRef.current.enableEffect(1);
         viewerRef.current.enableControl(1);
     };
 
@@ -151,8 +161,13 @@ export default function ControlBar({ viewerRef, tour }) {
     useEffect(() => {
         if (!viewerRef.current) return;
 
-        if (tourSlice.isCardboardMode) viewerRef.current.enableEffect(MODES.CARDBOARD);
-        else viewerRef.current.enableEffect(MODES.NORMAL);
+        if (tourSlice.isCardboardMode) {
+            viewerRef.current.enableEffect(MODES.CARDBOARD);
+            viewerRef.current.enableControl(MODES.CARDBOARD);
+        } else {
+            viewerRef.current.enableEffect(MODES.NORMAL);
+            viewerRef.current.enableControl(MODES.NORMAL);
+        }
     }, [tourSlice.isCardboardMode]);
 
     return (
@@ -230,7 +245,7 @@ export default function ControlBar({ viewerRef, tour }) {
                     type='button'
                     title='Chuyển chế độ xem'
                     className='hover:opacity-80'
-                    onClick={handleEnableCardboardMode}
+                    onClick={tourSlice.isCardboardMode ? handleEnableCardboardMode : handleExitCardboardMode}
                 >
                     {tourSlice.isCardboardMode ? (
                         <Unicons.UilPanoramaH size='32' />
