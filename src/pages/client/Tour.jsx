@@ -134,7 +134,11 @@ export default function Tour() {
 
     return (
         <PageTransition className='fixed inset-0 z-0 overflow-hidden w-full mt-[3.75rem] dark:text-white'>
-            <div id='panorama' ref={viewerElementRef} className='absolute inset-0 bottom-0'></div>
+            <div id='panorama-container' className={`absolute inset-0 flex`}>
+                <div className={`${tourSlice.isCardboardMode ? 'block' : 'hidden'} w-40 h-full bg-black`}></div>
+                <div id='panorama' ref={viewerElementRef} className='flex-grow'></div>
+                <div className={`${tourSlice.isCardboardMode ? 'block' : 'hidden'} w-40 h-full bg-black`}></div>
+            </div>
             <ControlBar viewerRef={viewerRef} tour={tour} />
             <ScenesList />
             <Map map={tour.atlas} />

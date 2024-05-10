@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import * as Unicons from '@iconscout/react-unicons';
 import { useDispatch, useSelector } from 'react-redux';
 import * as THREE from 'three';
-import { MODES } from 'panolens';
+import { MODES, Viewer } from 'panolens';
 
 /* Assets */
 import audios from '@assets/audios';
@@ -27,7 +27,7 @@ import {
 /* Utils */
 import CONTROL_BAR_OPTIONS from '@utils/constants/ControlBar';
 
-export default function ControlBar({ viewerRef, tour }) {
+export default function ControlBar({ viewerRef, viewerElementRef, tour }) {
     /* Hooks */
     const dispatch = useDispatch();
 
@@ -80,7 +80,7 @@ export default function ControlBar({ viewerRef, tour }) {
         dispatch(disableCardboardMode());
 
         // Remove exit fullscreen button from viewer
-        const viewer = document.getElementById('panorama');
+        const viewer = document.getElementById('panorama-container');
         const btn = document.getElementById('btn-exit-fullscreen');
         viewer.removeChild(btn);
     };
@@ -89,7 +89,7 @@ export default function ControlBar({ viewerRef, tour }) {
 
         dispatch(enableCardboardMode());
 
-        const viewer = document.getElementById('panorama');
+        const viewer = document.getElementById('panorama-container');
         if (!viewer) return;
 
         viewer.requestFullscreen(); // Enter fullscreen mode
