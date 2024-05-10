@@ -154,6 +154,25 @@ export default function ControlBar({ viewerRef, tour }) {
         if (tourSlice.isCardboardMode) viewerRef.current.enableEffect(MODES.CARDBOARD);
         else viewerRef.current.enableEffect(MODES.NORMAL);
     }, [tourSlice.isCardboardMode]);
+    useEffect(() => {
+        function startCompass() {
+            DeviceOrientationEvent.requestPermission()
+                .then((response) => {
+                    if (response === 'granted') {
+                        window.addEventListener('deviceorientation', handler, true);
+                    } else {
+                        alert('has to be allowed!');
+                    }
+                })
+                .catch(() => alert('not supported'));
+            window.addEventListener('deviceorientationabsolute', handler, true);
+        }
+        startCompass();
+
+        function handler(e) {
+            const degree = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+        }
+    }, []);
 
     return (
         <section
