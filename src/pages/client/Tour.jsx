@@ -136,7 +136,7 @@ export default function Tour() {
         <PageTransition className='fixed inset-0 z-0 overflow-hidden w-full mt-[3.75rem] dark:text-white'>
             <div id='panorama-container' className={`absolute inset-0 flex`}>
                 <div className={`${tourSlice.isCardboardMode ? 'block' : 'hidden'} w-40 h-full bg-black`}></div>
-                <div id='panorama' ref={viewerElementRef} className='flex-grow'></div>
+                <div id='panorama' ref={viewerElementRef} className={`flex-grow ${tourSlice.isCardboardMode ? 'my-auto w-4/5 h-4/5' : ''}`}></div>
                 <div className={`${tourSlice.isCardboardMode ? 'block' : 'hidden'} w-40 h-full bg-black`}></div>
             </div>
             <ControlBar viewerRef={viewerRef} tour={tour} />
