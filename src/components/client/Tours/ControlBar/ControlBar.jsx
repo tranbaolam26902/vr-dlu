@@ -75,7 +75,7 @@ export default function ControlBar({ viewerRef, tour }) {
         dispatch(disableAutoRotate());
     };
     const handleExitCardboardMode = () => {
-        document.exitFullscreen(); // Exit fullscreen mode
+        if (document.fullscreenElement) document.exitFullscreen(); // Exit fullscreen mode
 
         dispatch(disableCardboardMode());
 
@@ -83,22 +83,10 @@ export default function ControlBar({ viewerRef, tour }) {
         const viewer = document.getElementById('panorama');
         const btn = document.getElementById('btn-exit-fullscreen');
         viewer.removeChild(btn);
-
-        // Disable sensor
-        viewerRef.current.enableEffect(0);
-        viewerRef.current.enableControl(0);
     };
     const handleEnableCardboardMode = () => {
         if (tourSlice.isCardboardMode) return;
-        DeviceOrientationEvent.requestPermission()
-            .then((response) => {
-                if (response == 'granted') {
-                    window.addEventListener('deviceorientation', (e) => {
-                        // do something with e
-                    });
-                }
-            })
-            .catch(console.error);
+
         dispatch(enableCardboardMode());
 
         const viewer = document.getElementById('panorama');
@@ -115,10 +103,6 @@ export default function ControlBar({ viewerRef, tour }) {
         exitButton.addEventListener('touchstart', handleExitCardboardMode);
         exitButton.addEventListener('click', handleExitCardboardMode);
         viewer.appendChild(exitButton);
-
-        // Enable sensor
-        viewerRef.current.enableEffect(1);
-        viewerRef.current.enableControl(1);
     };
 
     /* Side effects */
@@ -162,11 +146,11 @@ export default function ControlBar({ viewerRef, tour }) {
         if (!viewerRef.current) return;
 
         if (tourSlice.isCardboardMode) {
-            viewerRef.current.enableEffect(MODES.CARDBOARD);
-            viewerRef.current.enableControl(MODES.CARDBOARD);
+            viewerRef.current.enableControl(1); // Enable sensor
+            viewerRef.current.enableEffect(MODES.CARDBOARD); // Enable cardboard mode
         } else {
-            viewerRef.current.enableEffect(MODES.NORMAL);
-            viewerRef.current.enableControl(MODES.NORMAL);
+            viewerRef.current.enableControl(0); // Disable sensor
+            viewerRef.current.enableEffect(MODES.NORMAL); // Disable cardboard mode
         }
     }, [tourSlice.isCardboardMode]);
 
@@ -245,7 +229,7 @@ export default function ControlBar({ viewerRef, tour }) {
                     type='button'
                     title='Chuyển chế độ xem'
                     className='hover:opacity-80'
-                    onClick={tourSlice.isCardboardMode ? handleEnableCardboardMode : handleExitCardboardMode}
+                    onClick={!tourSlice.isCardboardMode ? handleEnableCardboardMode : handleExitCardboardMode}
                 >
                     {tourSlice.isCardboardMode ? (
                         <Unicons.UilPanoramaH size='32' />
