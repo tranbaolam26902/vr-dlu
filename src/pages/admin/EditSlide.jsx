@@ -452,7 +452,7 @@ export default function EditSlide() {
                                 )}
                                 <Editor
                                     onInit={(_, editor) => (contentRef.current = editor)}
-                                    apiKey='iy151ilgnsokvtpsb8eroaey31cdbzndda9k1s71o3hwlli9'
+                                    apiKey='70axgk6y9p4knwssnip8h8ok0k5lzy2locbycrrgnujisbtr'
                                     init={{
                                         plugins:
                                             'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount fullscreen',
